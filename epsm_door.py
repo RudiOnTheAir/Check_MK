@@ -47,7 +47,7 @@ def check_epsm_door_function(item, section):
 
 
 register.snmp_section(
-    name="EPowerswitch",
+    name="epsm_door",
     detect=DETECT_FUNCTION,
     parse_function=parse_epsm_door_function,
     fetch=[
