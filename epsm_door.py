@@ -23,6 +23,8 @@ def parse_epsm_door_function(string_table):
     for line in string_table:
         data[line[0]] = line[1]
     return data
+    print('string_table')
+
 
 #    return {
 #        line[0]: line[1]
