@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Plugin fuer Anbindung ePowerswitch 8XM an CMK 2.x
+
 from typing import Dict, List, Mapping, Tuple
 
 from .agent_based_api.v1 import (
