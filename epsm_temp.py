@@ -59,7 +59,7 @@ class Temp:
     status: str
 
 
-def parse_epsm_group(string_table: StringTable) -> Dict[str, Temp]:
+def parse_epsm_temp(string_table: StringTable) -> Dict[str, Temp]:
     section = {}
     for line in string_table:
         item, name, status = line
@@ -71,14 +71,14 @@ def parse_epsm_group(string_table: StringTable) -> Dict[str, Temp]:
         #     name = ''.join([f'{chr(int(x, 16))}' for x in name])
         #     # 'Schrank 1 Vordertür'
 
-        section[item.replace('G', '')] = Temp(
+        section[item.replace('T', '')] = Temp(
             name=name,
             status=status,
         )
     return section
 
 
-def discovery_epsm_group(params, section: Dict[str, Temp]) -> DiscoveryResult:
+def discovery_epsm_temp(params, section: Dict[str, Temp]) -> DiscoveryResult:
     for item in section:
         if params['add_not_conected']:
             yield Service(item=item)
@@ -86,9 +86,9 @@ def discovery_epsm_group(params, section: Dict[str, Temp]) -> DiscoveryResult:
             yield Service(item=item)
 
 
-def check_epsm_group(item, params, section: Dict[str, Temp]) -> CheckResult:
+def check_epsm_temp(item, params, section: Dict[str, Temp]) -> CheckResult:
     try:
-        di = section[item]
+        ai = section[item]
     except KeyError:
         return
 
@@ -107,7 +107,7 @@ def check_epsm_group(item, params, section: Dict[str, Temp]) -> CheckResult:
 register.snmp_section(
     name='epsm_temp',
     detect=startswith('.1.3.6.1.2.1.1.2.0', '.1.3.6.1.4.1.24734.'),
-    parse_function=parse_epsm_group,
+    parse_function=parse_epsm_temp,
     fetch=SNMPTree(
         base='.1.3.6.1.4.1.24734.13.4.1.1',  # eps8XM-private::TempEntry
         oids=[
@@ -121,7 +121,7 @@ register.snmp_section(
 register.check_plugin(
     name='epsm_temp',
     service_name='Temp status %s',
-    discovery_function=discovery_epsm_group,
+    discovery_function=discovery_epsm_temp,
     discovery_ruleset_name='discovery_epsm_temp',
     discovery_default_parameters={
         'add_not_conected': True,
